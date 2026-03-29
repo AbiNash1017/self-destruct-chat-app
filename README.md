@@ -2,7 +2,7 @@
 
 A modern, high-performance, and **self-destructing** private chat application designed for ephemeral and secure communication.
 
-**[Live Preview](https://private-chat-v2.vercel.app/)** | **[Portfolio](https://abinash-das.vercel.app/)**
+**[Live Preview](https://self-destruct-chat-app.vercel.app/)** | **[Portfolio](https://abinash-das.vercel.app/)**
 
 ---
 
