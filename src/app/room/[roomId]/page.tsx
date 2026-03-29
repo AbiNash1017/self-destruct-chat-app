@@ -123,15 +123,18 @@ const Page = () => {
     <main className="flex flex-col h-dvh max-h-dvh overflow-hidden bg-black">
       <header className="sticky top-0 z-20 border-b border-zinc-800 p-3 sm:p-4 flex items-center justify-between bg-black/80 backdrop-blur-md">
         <div className="flex items-center gap-4">
-          <div className="flex flex-col">
-            <span className="text-xs text-zinc-500 uppercase">Room ID</span>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-green-500 truncate">{roomId.slice(0,10) + "..."}</span>
+          <div className="flex flex-col gap-0.5 min-[400px]:gap-1">
+            <span className="text-[10px] min-[400px]:text-xs text-zinc-500 uppercase tracking-tight">Room ID</span>
+            <div className="flex items-center gap-1.5 min-[400px]:gap-2">
+              <span className="font-bold text-green-500 truncate text-sm min-[400px]:text-base">
+                <span className="inline min-[400px]:hidden">{roomId.slice(0, 6) + "..."}</span>
+                <span className="hidden min-[400px]:inline">{roomId.slice(0, 10) + "..."}</span>
+              </span>
               <button
                 onClick={copyLink}
-                className="text-[10px] bg-zinc-800 hover:bg-zinc-700 px-2 py-0.5 rounded text-zinc-400 hover:text-zinc-200 transition-colors"
+                className="text-[10px] bg-zinc-800 hover:bg-zinc-700 px-1.5 py-0.5 rounded text-zinc-400 hover:text-zinc-200 transition-colors uppercase font-bold"
               >
-                {copyStatus}
+                {copyStatus === "COPY" ? "🔗" : "✅"}
               </button>
             </div>
           </div>
@@ -152,14 +155,27 @@ const Page = () => {
           </div>
         </div>
 
-        <button
-          onClick={() => destroyRoom()}
-          className="text-[10px] sm:text-xs bg-zinc-900 hover:bg-red-600 px-2 sm:px-3 py-1.5 rounded text-zinc-400 hover:text-white font-bold transition-all group flex items-center gap-1.5 sm:gap-2 disabled:opacity-50 border border-zinc-800 hover:border-red-500"
-        >
-          <span className="group-hover:animate-pulse">💣</span>
-          <span className="hidden min-[450px]:inline">DESTROY NOW</span>
-          <span className="min-[450px]:hidden">DESTROY</span>
-        </button>
+        <div className="flex items-center gap-2">
+          {/* CONFIRMATION STATE */}
+          <button
+            onClick={() => {
+              if (confirm("🚨 DESTROY THIS ROOM PERMANENTLY?")) {
+                destroyRoom()
+              }
+            }}
+            className="group relative flex items-center gap-2 overflow-hidden rounded-xl border border-red-500/20 bg-red-500/5 px-3 py-2 text-[11px] font-black uppercase tracking-wider text-red-500 transition-all hover:border-red-500/40 hover:bg-red-500/10 active:scale-95 sm:px-4 sm:py-2 sm:text-xs"
+          >
+            {/* Subtle Glow */}
+            <div className="absolute inset-0 bg-red-500/10 opacity-0 blur-xl transition-opacity group-hover:opacity-100" />
+            
+            <span className="relative z-10 text-base group-hover:animate-bounce">💣</span>
+            <span className="relative z-10 hidden min-[500px]:inline">Destroy Room</span>
+            <span className="relative z-10 min-[500px]:hidden">Destroy</span>
+            
+            {/* Scanning Line Effect */}
+            <div className="absolute inset-0 z-0 h-full w-[2px] -translate-x-full bg-gradient-to-b from-transparent via-red-500/40 to-transparent group-hover:animate-loading-bar" />
+          </button>
+        </div>
       </header>
 
       {/* MESSAGES */}
