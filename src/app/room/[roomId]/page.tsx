@@ -120,8 +120,8 @@ const Page = () => {
   }
 
   return (
-    <main className="flex flex-col h-screen max-h-screen overflow-hidden">
-      <header className="border-b border-zinc-800 p-4 flex items-center justify-between bg-zinc-900/30">
+    <main className="flex flex-col h-dvh max-h-dvh overflow-hidden bg-black">
+      <header className="sticky top-0 z-20 border-b border-zinc-800 p-3 sm:p-4 flex items-center justify-between bg-black/80 backdrop-blur-md">
         <div className="flex items-center gap-4">
           <div className="flex flex-col">
             <span className="text-xs text-zinc-500 uppercase">Room ID</span>
@@ -136,10 +136,10 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="h-8 w-px bg-zinc-800" />
+          <div className="h-8 w-px bg-zinc-800 hidden min-[400px]:block" />
 
-          <div className="flex flex-col">
-            <span className="text-xs text-zinc-500 uppercase">Self-Destruct</span>
+          <div className="flex flex-col min-w-fit">
+            <span className="text-[10px] sm:text-xs text-zinc-500 uppercase">Self-Destruct</span>
             <span
               className={`text-sm font-bold flex items-center gap-2 ${
                 timeRemaining !== null && timeRemaining < 60
@@ -154,10 +154,11 @@ const Page = () => {
 
         <button
           onClick={() => destroyRoom()}
-          className="text-xs bg-zinc-800 hover:bg-red-600 px-3 py-1.5 rounded text-zinc-400 hover:text-white font-bold transition-all group flex items-center gap-2 disabled:opacity-50"
+          className="text-[10px] sm:text-xs bg-zinc-900 hover:bg-red-600 px-2 sm:px-3 py-1.5 rounded text-zinc-400 hover:text-white font-bold transition-all group flex items-center gap-1.5 sm:gap-2 disabled:opacity-50 border border-zinc-800 hover:border-red-500"
         >
           <span className="group-hover:animate-pulse">💣</span>
-          DESTROY NOW
+          <span className="hidden min-[450px]:inline">DESTROY NOW</span>
+          <span className="min-[450px]:hidden">DESTROY</span>
         </button>
       </header>
 
@@ -222,7 +223,7 @@ const Page = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 border-t border-zinc-800 bg-zinc-900/30">
+      <div className="p-3 sm:p-4 border-t border-zinc-800 bg-black/80 backdrop-blur-md">
         <div className="flex gap-4">
           <div className="flex-1 relative group">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500 animate-pulse">
