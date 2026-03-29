@@ -62,13 +62,21 @@ const messages = new Elysia({ prefix: "/messages" }).use(authMiddleware).post("/
     }
     //add message to history
     await redis.rpush(`messages:${roomId}`, { ...message, token: auth.token })
+    // Realtime broadcast should be fast
     await realtime.channel(roomId).emit("chat.message", message)
-    //housekeeping
-    const remaining = await redis.ttl(`meta:${roomId}`)
 
-    await redis.expire(`messages:${roomId}`, remaining)
-    await redis.expire(`history:${roomId}`, remaining)
-    await redis.expire(roomId, remaining)
+    // Parallelize housekeeping to return response faster
+    redis.ttl(`meta:${roomId}`).then((remaining) => {
+        if (remaining > 0) {
+            Promise.all([
+                redis.expire(`messages:${roomId}`, remaining),
+                redis.expire(`history:${roomId}`, remaining),
+                redis.expire(roomId, remaining),
+            ]).catch(console.error);
+        }
+    });
+
+    return { success: true };
 }, {
     query: z.object({ roomId: z.string() }),
     body: z.object({
@@ -89,9 +97,16 @@ const messages = new Elysia({ prefix: "/messages" }).use(authMiddleware).post("/
         { query: z.object({ roomId: z.string() }) }
     )
 
-const app = new Elysia({ prefix: "/api" }).use(cors({
-    maxAge: 86400,
-})).use(rooms).use(messages)
+const app = new Elysia({ prefix: "/api" })
+    .use(cors({
+        origin: true,
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+        maxAge: 86400,
+    }))
+    .use(rooms)
+    .use(messages)
 
 export const GET = app.fetch
 export const POST = app.fetch
