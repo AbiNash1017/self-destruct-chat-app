@@ -89,7 +89,9 @@ const messages = new Elysia({ prefix: "/messages" }).use(authMiddleware).post("/
         { query: z.object({ roomId: z.string() }) }
     )
 
-const app = new Elysia({ prefix: "/api" }).use(cors()).use(rooms).use(messages)
+const app = new Elysia({ prefix: "/api" }).use(cors({
+    maxAge: 86400,
+})).use(rooms).use(messages)
 
 export const GET = app.fetch
 export const POST = app.fetch
